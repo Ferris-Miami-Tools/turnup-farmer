@@ -1,0 +1,16 @@
+# Environment
+.env
+.env.local
+.env.production
+
+# Development files
+node_modules
+dist
+
+# Mac files
+.DS_Store
+
+# Log files
+logs
+*.log
+npm-debug.log*
