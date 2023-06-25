@@ -1,19 +1,14 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+const logger = require("firebase-functions/logger");
+const {
+  beforeUserCreated,
+  HttpsError,
+} = require("firebase-functions/v2/identity");
 
-import { onRequest } from "firebase-functions/v2/https";
-import * as logger from "firebase-functions/logger";
+exports.beforeCreated = beforeUserCreated(event => {
+  const user = event.data;
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
-
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+  if (!user?.email?.includes("@miamioh.edu")) {
+    logger.info(`Unauthorized email: ${user.email}`);
+    throw new HttpsError("permission-denied", "Unauthorized email");
+  }
+});

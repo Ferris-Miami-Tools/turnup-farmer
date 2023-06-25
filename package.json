@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev:emulators": "concurrently --kill-others \"vite --host\" \"firebase emulators:start --project=turnup-farmer --only auth,firestore,functions\"",
-    "dev:prod": "vite --host --mode production",
+    "dev": "vite --host",
+    "dev:live": "vite --host --mode production",
     "build": "vite build",
-    "deploy": "firebase deploy --only firestore,functions",
+    "deploy": "firebase deploy --only firestore,functions -P default",
+    "deploy:dev": "firebase deploy --only firestore,functions -P development",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write src/ && prettier --write functions/src"
@@ -15,7 +16,8 @@
     "firebase": "^9.22.2",
     "pinia": "^2.1.3",
     "vue": "^3.3.4",
-    "vue-router": "^4.2.2"
+    "vue-router": "^4.2.2",
+    "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
@@ -23,7 +25,6 @@
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/eslint-config-prettier": "^7.1.0",
     "autoprefixer": "^10.4.14",
-    "concurrently": "^8.2.0",
     "eslint": "^8.39.0",
     "eslint-plugin-vue": "^9.11.0",
     "npm-run-all": "^4.1.5",

@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "turnup-farmer"
-  }
+    "default": "turnup-farmer",
+    "development": "turnup-farmer-dev"
+  },
+  "targets": {},
+  "etags": {}
 }

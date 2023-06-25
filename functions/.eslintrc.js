@@ -13,6 +13,7 @@ module.exports = {
   ],
   parserOptions: {
     sourceType: "module",
+    ecmaVersion: 2020,
   },
   ignorePatterns: [
     "/lib/**/*", // Ignore built files.
@@ -24,5 +25,6 @@ module.exports = {
     indent: ["error", 2],
     "object-curly-spacing": 0,
     "quote-props": ["error", "as-needed"],
+    "arrow-parens": ["error", "as-needed"],
   },
 };
