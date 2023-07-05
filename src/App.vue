@@ -2,7 +2,7 @@
   import { onAuthStateChanged } from "firebase/auth";
   import { doc, getDoc, getFirestore } from "firebase/firestore";
   import { onBeforeUnmount } from "vue";
-  import { RouterLink, RouterView } from "vue-router";
+  import { RouterLink, RouterView, useRouter } from "vue-router";
   import { useToast } from "vue-toastification";
 
   import { useAuthStore } from "./stores/auth";
@@ -10,6 +10,7 @@
   import LoadingSessionView from "./views/LoadingSessionView.vue";
 
   const auth = useAuthStore();
+  const router = useRouter();
   const toast = useToast();
 
   const unsubscribe = onAuthStateChanged(auth.auth, async updatedUser => {
@@ -17,6 +18,7 @@
     try {
       if (!updatedUser) {
         auth.user = null;
+        router.push("/");
         return;
       }
       const db = getFirestore();
@@ -37,6 +39,9 @@
       await auth.logout();
     } finally {
       auth.user = newUserData;
+      if (auth.user) {
+        router.push(auth.user.role);
+      }
       auth.loadingSession = false;
     }
   });
@@ -57,6 +62,7 @@
       </RouterLink>
       <button
         v-if="auth.user"
+        @click="auth.logout"
         class="px-4 border border-teal-950 dark:border-teal-100 rounded-full hover:bg-slate-300 dark:hover:bg-slate-900"
       >
         Log out

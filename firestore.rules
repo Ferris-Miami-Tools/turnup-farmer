@@ -2,8 +2,33 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+    function userIsAuthenticated() {
+      return request.auth.uid != null;
+    }
+    function isInstructor() {
+      return get(/databases/$(database)/documents/users/$(request.auth.token.email)).data.role == "instructor";
+    }
+    function userRecordAccess(userEmail) {
+      return request.auth.token.email == userEmail || resource.data.email == userEmail || isInstructor();
+    }
+    function checkinRecordAccess() {
+      return request.auth.token.email == resource.data.email || isInstructor();
+    }
+    
+    match /users/{userEmail} {
+      allow read, update: if userIsAuthenticated() && userRecordAccess(userEmail);
+      allow create, delete: if false;
+    }
+
+    match /classes/{classID} {
+      allow read: if userIsAuthenticated();
+      allow create, delete, update: if false;
+    }
+
+    match /checkins/{checkInID} {
+      allow create: if userIsAuthenticated();
+      allow read: if userIsAuthenticated() && checkinRecordAccess();
+      allow delete, update: if userIsAuthenticated() && isInstructor();
     }
   }
 }
